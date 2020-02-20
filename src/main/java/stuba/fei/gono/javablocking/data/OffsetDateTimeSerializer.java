@@ -1,0 +1,37 @@
+package stuba.fei.gono.javablocking.data;
+
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.databind.SerializerProvider;
+import com.fasterxml.jackson.databind.ser.std.StdSerializer;
+import lombok.extern.slf4j.Slf4j;
+
+import java.io.IOException;
+import java.time.OffsetDateTime;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+
+@Slf4j
+public class OffsetDateTimeSerializer extends StdSerializer<OffsetDateTime> {
+    protected OffsetDateTimeSerializer(Class<OffsetDateTime> t) {
+        super(t);
+    }
+
+    public OffsetDateTimeSerializer()
+    {
+        this(null);
+    }
+
+    @Override
+    public void serialize(OffsetDateTime offsetDateTime, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException {
+        //DateTimeFormatter.ISO_DATE_TIME
+        String tmp = DateTimeFormatter.ISO_DATE_TIME.format(offsetDateTime);
+        int index1=tmp.lastIndexOf('.');
+        int index2=tmp.lastIndexOf('+');
+        if(index2 == -1)
+            index2 = tmp.lastIndexOf('-');
+        tmp=tmp.substring(0,index1).concat(
+        tmp.substring(index2));
+        log.info(tmp);
+        jsonGenerator.writeString(tmp);
+    }
+}

@@ -12,7 +12,7 @@ import java.time.format.DateTimeFormatter;
 @Component
 public class ZonedDateTimeDeserializer extends StdDeserializer<ZonedDateTime> {
 
-    private static  DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss a z");
+   // private static  DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss a z");
 
     public ZonedDateTimeDeserializer()
     {
@@ -24,7 +24,7 @@ public class ZonedDateTimeDeserializer extends StdDeserializer<ZonedDateTime> {
     }
 
     @Override
-    public ZonedDateTime deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException, JsonProcessingException {
+    public ZonedDateTime deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException {
         String tmp = jsonParser.getText();
 
         return ZonedDateTime.parse(tmp);

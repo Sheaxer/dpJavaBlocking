@@ -1,6 +1,7 @@
 package stuba.fei.gono.javablocking.pojo;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -17,6 +18,7 @@ import stuba.fei.gono.javablocking.validation.annotations.ValidAccount;
 
 import javax.validation.Valid;
 import javax.validation.constraints.*;
+import java.time.OffsetDateTime;
 import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.List;
@@ -50,9 +52,11 @@ public class ReportedOverlimitTransaction {
     @NotNull
     @NotEmpty
     private List<Vault> vault;
-    @JsonDeserialize(using = ZonedDateTimeDeserializer.class)
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern="yyyy-MM-dd HH:mm:ss a z")
-    private ZonedDateTime modificationDate;
+   // @JsonDeserialize(using = ZonedDateTimeDeserializer.class)
+    //@JsonFormat(shape = JsonFormat.Shape.STRING, pattern="yyyy-MM-dd HH:mm:ss a z")
+    @JsonDeserialize(using = OffsetDateTimeDeserializer.class)
+    @JsonSerialize(using = OffsetDateTimeSerializer.class)
+    private OffsetDateTime modificationDate;
 
 
     //@Past(message = "INVALID_DATE_IN_PAST")
@@ -76,6 +80,8 @@ public class ReportedOverlimitTransaction {
     @JsonSerialize(using = EmployeeSerializer.class)
     private Employee createdBy;
 
+    @JsonIgnore
+    private String zoneOffset;
     /*@PersistenceConstructor
     public ReportedOverlimitTransaction(String id, OrderCategory orderCategory, State state, Account sourceAccount,
                                         Client clientId, String identificationId, Money amount, )

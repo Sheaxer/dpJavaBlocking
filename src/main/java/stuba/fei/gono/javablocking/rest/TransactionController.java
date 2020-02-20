@@ -17,6 +17,8 @@ import stuba.fei.gono.javablocking.pojo.State;
 
 import javax.validation.Valid;
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.Optional;
@@ -44,7 +46,11 @@ public class TransactionController {
         Optional<ReportedOverlimitTransaction> transaction= transactionRepository.findById(id);
         if(transaction.isPresent())
         {
-            return new ResponseEntity<>(transaction.get(),HttpStatus.ACCEPTED);
+            ReportedOverlimitTransaction trans = transaction.get();
+            ZoneOffset offset = ZoneOffset.of(trans.getZoneOffset());
+            trans.setModificationDate(trans.getModificationDate().toInstant().atOffset(offset));
+
+            return new ResponseEntity<>(trans,HttpStatus.ACCEPTED);
         }
         else
         {
@@ -61,7 +67,8 @@ public class TransactionController {
         newTransaction.setId(nextSequenceService.getNextSequence("customSequences"));
         if(newTransaction.getState() == null)
             newTransaction.setState(State.CREATED);
-        newTransaction.setModificationDate(ZonedDateTime.now());
+        newTransaction.setModificationDate(OffsetDateTime.now());
+        newTransaction.setZoneOffset(newTransaction.getModificationDate().getOffset().getId());
         transactionRepository.save(newTransaction);
         return new ResponseEntity<>(newTransaction,HttpStatus.CREATED);
     }
