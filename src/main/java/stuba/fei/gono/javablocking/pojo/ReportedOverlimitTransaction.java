@@ -1,15 +1,15 @@
 package stuba.fei.gono.javablocking.pojo;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.PersistenceConstructor;
 import org.springframework.data.mongodb.core.mapping.DBRef;
-import stuba.fei.gono.javablocking.data.ClientDeserializer;
-import stuba.fei.gono.javablocking.data.EmployeeDeserializer;
-import stuba.fei.gono.javablocking.data.OrganisationUnitDeserializer;
-import stuba.fei.gono.javablocking.data.ZonedDateTimeDeserializer;
+import stuba.fei.gono.javablocking.data.*;
 import stuba.fei.gono.javablocking.validation.annotations.BankingDay;
 import stuba.fei.gono.javablocking.validation.annotations.DaysBeforeDate;
 import stuba.fei.gono.javablocking.validation.annotations.MaxAmount;
@@ -23,6 +23,7 @@ import java.util.List;
 
 @Data
 @NoArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class ReportedOverlimitTransaction {
 
     @Id
@@ -39,6 +40,7 @@ public class ReportedOverlimitTransaction {
     @NotNull
     @Valid
     @JsonDeserialize(using = ClientDeserializer.class)
+    @JsonSerialize(using = ClientSerializer.class)
     private Client clientId;
     @NotBlank
     private String identificationId;
@@ -49,6 +51,7 @@ public class ReportedOverlimitTransaction {
     @NotEmpty
     private List<Vault> vault;
     @JsonDeserialize(using = ZonedDateTimeDeserializer.class)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern="yyyy-MM-dd HH:mm:ss a z")
     private ZonedDateTime modificationDate;
 
 
@@ -57,6 +60,7 @@ public class ReportedOverlimitTransaction {
     @NotNull
     @FutureOrPresent(message = "INVALID_DATE_IN_PAST")
     @DaysBeforeDate(message = "FIELD_INVALID_TOO_NEAR_IN_FUTURE")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern="yyyy-MM-dd")
     private Date transferDate;
 
     private String note;
@@ -64,10 +68,12 @@ public class ReportedOverlimitTransaction {
     @DBRef
     @NotNull
     @JsonDeserialize(using = OrganisationUnitDeserializer.class)
+    @JsonSerialize(using = OrganisationUnitSerializer.class)
     private OrganisationUnit organisationUnitID;
     @DBRef
     @NotNull
     @JsonDeserialize(using = EmployeeDeserializer.class)
+    @JsonSerialize(using = EmployeeSerializer.class)
     private Employee createdBy;
 
     /*@PersistenceConstructor
