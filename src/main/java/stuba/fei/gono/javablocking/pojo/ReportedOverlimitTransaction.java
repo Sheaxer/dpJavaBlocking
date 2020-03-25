@@ -31,7 +31,7 @@ public class ReportedOverlimitTransaction {
 
     @Id
     private String id;
-    @NotNull
+    @NotNull(message = "MUST_NOT_NULL")
     private OrderCategory orderCategory;
 
     private State state;

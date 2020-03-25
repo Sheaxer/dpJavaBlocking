@@ -1,5 +1,6 @@
 package stuba.fei.gono.javablocking.rest;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.io.ClassPathResource;
@@ -25,6 +26,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/reportedOverlimitTransaction")
+@Slf4j
 public class TransactionController {
 
     private ClientRepository clientRepository;
@@ -47,12 +49,16 @@ public class TransactionController {
         if(transaction.isPresent())
         {
             ReportedOverlimitTransaction trans = transaction.get();
+
+            /*trans.setState(State.CREATED);
+            transactionRepository.save(trans);*/
+
             //trans.getModificationDate();
             /*if(trans.getZoneOffset() != null) {
                 ZoneOffset offset = ZoneOffset.of(trans.getZoneOffset());
                 trans.setModificationDate(trans.getModificationDate().toInstant().atOffset(offset));
             }*/
-
+            //log.info(trans.getClientId().getFirstName());
             return new ResponseEntity<>(trans,HttpStatus.ACCEPTED);
         }
         else
@@ -74,6 +80,22 @@ public class TransactionController {
         newTransaction.setZoneOffset(newTransaction.getModificationDate().getOffset().getId());
         transactionRepository.save(newTransaction);
         return new ResponseEntity<>(newTransaction,HttpStatus.CREATED);
+    }
+
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity<ReportedOverlimitTransaction> deleteTransaction(@PathVariable String id)
+    {
+        Optional<ReportedOverlimitTransaction> transaction= transactionRepository.findById(id);
+        if(transaction.isPresent())
+        {
+            ReportedOverlimitTransaction trans = transaction.get();
+            transactionRepository.delete(trans);
+            return new ResponseEntity<>(trans,HttpStatus.ACCEPTED);
+        }
+        else
+        {
+            throw new ReportedOverlimitTransactionException("ID_NOT_FOUND");
+        }
     }
 
 }

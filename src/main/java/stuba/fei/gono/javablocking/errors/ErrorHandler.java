@@ -35,6 +35,7 @@ public class ErrorHandler {
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ResponseBody
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public List<String> handleValidationExceptions(MethodArgumentNotValidException ex)
     {
@@ -43,4 +44,5 @@ public class ErrorHandler {
                 .map(ObjectError::getDefaultMessage)
                 .collect(Collectors.toList());
     }
+
 }
