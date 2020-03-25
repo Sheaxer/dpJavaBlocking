@@ -47,8 +47,11 @@ public class TransactionController {
         if(transaction.isPresent())
         {
             ReportedOverlimitTransaction trans = transaction.get();
-            ZoneOffset offset = ZoneOffset.of(trans.getZoneOffset());
-            trans.setModificationDate(trans.getModificationDate().toInstant().atOffset(offset));
+            //trans.getModificationDate();
+            /*if(trans.getZoneOffset() != null) {
+                ZoneOffset offset = ZoneOffset.of(trans.getZoneOffset());
+                trans.setModificationDate(trans.getModificationDate().toInstant().atOffset(offset));
+            }*/
 
             return new ResponseEntity<>(trans,HttpStatus.ACCEPTED);
         }

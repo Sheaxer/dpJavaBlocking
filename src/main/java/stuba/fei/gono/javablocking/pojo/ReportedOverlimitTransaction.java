@@ -19,6 +19,7 @@ import stuba.fei.gono.javablocking.validation.annotations.ValidAccount;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
 import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.List;
@@ -58,6 +59,12 @@ public class ReportedOverlimitTransaction {
     @JsonSerialize(using = OffsetDateTimeSerializer.class)
     private OffsetDateTime modificationDate;
 
+    public OffsetDateTime getModificationDate()
+    {
+        if(this.zoneOffset !=null)
+            this.setModificationDate(this.modificationDate.toInstant().atOffset(ZoneOffset.of(this.zoneOffset)));
+        return this.modificationDate;
+    }
 
     //@Past(message = "INVALID_DATE_IN_PAST")
     //@BankingDay(message = "INVALID_DATE")

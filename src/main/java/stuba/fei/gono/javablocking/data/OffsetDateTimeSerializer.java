@@ -25,12 +25,21 @@ public class OffsetDateTimeSerializer extends StdSerializer<OffsetDateTime> {
     public void serialize(OffsetDateTime offsetDateTime, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException {
         //DateTimeFormatter.ISO_DATE_TIME
         String tmp = DateTimeFormatter.ISO_DATE_TIME.format(offsetDateTime);
-        int index1=tmp.lastIndexOf('.');
-        int index2=tmp.lastIndexOf('+');
-        if(index2 == -1)
-            index2 = tmp.lastIndexOf('-');
-        tmp=tmp.substring(0,index1).concat(
-        tmp.substring(index2));
+        log.info("I AM HERE");
+        log.info(tmp);
+
+        if(tmp.lastIndexOf('Z') != -1)
+        {
+            tmp = tmp.substring(0,tmp.lastIndexOf('.')).concat("+00:00");
+        }
+        else {
+            int index1 = tmp.lastIndexOf('.');
+            int index2 = tmp.lastIndexOf('+');
+            if (index2 == -1)
+                index2 = tmp.lastIndexOf('-');
+            tmp = tmp.substring(0, index1).concat(
+                    tmp.substring(index2));
+        }
         log.info(tmp);
         jsonGenerator.writeString(tmp);
     }
