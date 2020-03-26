@@ -1,4 +1,4 @@
-package stuba.fei.gono.javablocking;
+package stuba.fei.gono.javablocking.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoOperations;

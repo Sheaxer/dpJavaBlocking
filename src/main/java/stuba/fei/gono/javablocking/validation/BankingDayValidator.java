@@ -1,11 +1,11 @@
 package stuba.fei.gono.javablocking.validation;
 
+import lombok.extern.slf4j.Slf4j;
 import stuba.fei.gono.javablocking.validation.annotations.BankingDay;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 import java.util.Date;
-
 public class BankingDayValidator implements ConstraintValidator<BankingDay, Date> {
     @Override
     public void initialize(BankingDay constraintAnnotation) {

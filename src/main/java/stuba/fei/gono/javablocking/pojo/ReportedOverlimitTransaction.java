@@ -7,14 +7,12 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.PersistenceConstructor;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import stuba.fei.gono.javablocking.data.*;
-import stuba.fei.gono.javablocking.validation.annotations.BankingDay;
-import stuba.fei.gono.javablocking.validation.annotations.DaysBeforeDate;
-import stuba.fei.gono.javablocking.validation.annotations.MaxAmount;
-import stuba.fei.gono.javablocking.validation.annotations.ValidAccount;
+import stuba.fei.gono.javablocking.validation.annotations.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.*;
@@ -31,7 +29,7 @@ public class ReportedOverlimitTransaction {
 
     @Id
     private String id;
-    @NotNull(message = "MUST_NOT_NULL")
+    @NotNull(message = "MUST_NOT_BE_NULL")
     private OrderCategory orderCategory;
 
     private State state;
@@ -40,7 +38,7 @@ public class ReportedOverlimitTransaction {
     private Account sourceAccount;
 
     @DBRef
-    @NotNull
+    @NotNull(message = "CLIENTID_NOT_VALID")
     @Valid
     @JsonDeserialize(using = ClientDeserializer.class)
     @JsonSerialize(using = ClientSerializer.class)
@@ -77,12 +75,12 @@ public class ReportedOverlimitTransaction {
     private String note;
 
     @DBRef
-    @NotNull
+    @NotNull(message = "ORGANISATIONUNITID_NOT_VALID")
     @JsonDeserialize(using = OrganisationUnitDeserializer.class)
     @JsonSerialize(using = OrganisationUnitSerializer.class)
     private OrganisationUnit organisationUnitID;
     @DBRef
-    @NotNull
+    @NotNull(message = "CREATEDBY_NOT_VALID")
     @JsonDeserialize(using = EmployeeDeserializer.class)
     @JsonSerialize(using = EmployeeSerializer.class)
     private Employee createdBy;

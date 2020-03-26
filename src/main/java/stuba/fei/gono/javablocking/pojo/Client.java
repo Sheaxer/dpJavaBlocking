@@ -23,8 +23,6 @@ public class Client {
     @NotBlank
     private String surName;
     @NotBlank
-
-    //private ZonedDateTime birthDate;
     @Id
     private String id;
 }

@@ -2,13 +2,10 @@ package stuba.fei.gono.javablocking.rest;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.ResourceLoader;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import stuba.fei.gono.javablocking.NextSequenceService;
+import stuba.fei.gono.javablocking.config.NextSequenceService;
 import stuba.fei.gono.javablocking.data.ClientRepository;
 import stuba.fei.gono.javablocking.data.ReportedOverlimitTransactionRepository;
 import stuba.fei.gono.javablocking.errors.CreateReportedOverlimitTransactionException;
@@ -17,11 +14,7 @@ import stuba.fei.gono.javablocking.pojo.ReportedOverlimitTransaction;
 import stuba.fei.gono.javablocking.pojo.State;
 
 import javax.validation.Valid;
-import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
-import java.time.ZonedDateTime;
-import java.util.Date;
 import java.util.Optional;
 
 @RestController
@@ -59,7 +52,7 @@ public class TransactionController {
                 trans.setModificationDate(trans.getModificationDate().toInstant().atOffset(offset));
             }*/
             //log.info(trans.getClientId().getFirstName());
-            return new ResponseEntity<>(trans,HttpStatus.ACCEPTED);
+            return new ResponseEntity<>(trans,HttpStatus.OK);
         }
         else
         {
@@ -74,11 +67,13 @@ public class TransactionController {
         // validate date
 
         newTransaction.setId(nextSequenceService.getNextSequence("customSequences"));
+
         if(newTransaction.getState() == null)
             newTransaction.setState(State.CREATED);
         newTransaction.setModificationDate(OffsetDateTime.now());
         newTransaction.setZoneOffset(newTransaction.getModificationDate().getOffset().getId());
         transactionRepository.save(newTransaction);
+        log.info("Created new transaction " + newTransaction.getId());
         return new ResponseEntity<>(newTransaction,HttpStatus.CREATED);
     }
 
@@ -89,13 +84,30 @@ public class TransactionController {
         if(transaction.isPresent())
         {
             ReportedOverlimitTransaction trans = transaction.get();
-            transactionRepository.delete(trans);
-            return new ResponseEntity<>(trans,HttpStatus.ACCEPTED);
+            if(!trans.getState().equals(State.CLOSED))
+            {
+                transactionRepository.delete(trans);
+                return new ResponseEntity<>(trans,HttpStatus.OK);
+            }
+            else
+                throw new ReportedOverlimitTransactionException("STATE_CLOSED");
+
         }
         else
         {
             throw new ReportedOverlimitTransactionException("ID_NOT_FOUND");
         }
+    }
+
+    @PutMapping(value = "/{id}")
+    public ResponseEntity<ReportedOverlimitTransaction> putTransaction(@PathVariable String id, @Valid @RequestBody ReportedOverlimitTransaction transaction)
+    {
+        //Optional<ReportedOverlimitTransaction> tran= transactionRepository.findById(id);
+        transaction.setId(id);
+        transaction.setModificationDate(OffsetDateTime.now());
+        transaction.setZoneOffset(transaction.getModificationDate().getOffset().getId());
+        transactionRepository.save(transaction);
+        return new ResponseEntity<>(transaction, HttpStatus.OK );
     }
 
 }

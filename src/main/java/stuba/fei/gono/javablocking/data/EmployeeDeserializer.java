@@ -10,6 +10,7 @@ import stuba.fei.gono.javablocking.pojo.Client;
 import stuba.fei.gono.javablocking.pojo.Employee;
 
 import java.io.IOException;
+import java.util.Optional;
 
 @Component
 public class EmployeeDeserializer extends StdDeserializer<Employee> {
@@ -25,7 +26,8 @@ public class EmployeeDeserializer extends StdDeserializer<Employee> {
     private EmployeeRepository employeeRepository;
 
     @Override
-    public Employee deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException, JsonProcessingException {
-        return employeeRepository.findById(jsonParser.getText()).get();
+    public Employee deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException {
+        Optional<Employee> e =  employeeRepository.findById(jsonParser.getText());
+        return e.orElse(null);
     }
 }

@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import stuba.fei.gono.javablocking.pojo.OrganisationUnit;
 
 import java.io.IOException;
+import java.util.Optional;
 
 @Component
 public class OrganisationUnitDeserializer extends StdDeserializer<OrganisationUnit> {
@@ -26,8 +27,8 @@ public class OrganisationUnitDeserializer extends StdDeserializer<OrganisationUn
     }
 
     @Override
-    public OrganisationUnit deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException, JsonProcessingException {
-        String tmp=jsonParser.getText();
-        return organisationUnitRepository.findById(tmp).get();
+    public OrganisationUnit deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException {
+        Optional<OrganisationUnit> o = organisationUnitRepository.findById(jsonParser.getText());
+        return o.orElse(null);
     }
 }

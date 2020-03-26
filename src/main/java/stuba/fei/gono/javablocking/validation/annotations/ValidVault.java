@@ -1,7 +1,6 @@
 package stuba.fei.gono.javablocking.validation.annotations;
 
-import org.springframework.beans.factory.annotation.Value;
-import stuba.fei.gono.javablocking.validation.MaxAmountValidator;
+import stuba.fei.gono.javablocking.validation.VaultValidator;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;
@@ -10,12 +9,13 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-@Target(ElementType.FIELD)
+@Constraint(validatedBy = VaultValidator.class)
+@Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-@Constraint(validatedBy = MaxAmountValidator.class)
-public @interface MaxAmount {
-    String message() default "";
+public @interface ValidVault {
+
+    String message() default "VAULT_ERROR";
     Class<?>[] groups() default { };
     Class<? extends Payload>[] payload() default { };
-    double maxValue() default 999999999.99;
+
 }

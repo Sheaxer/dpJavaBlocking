@@ -45,4 +45,12 @@ public class ErrorHandler {
                 .collect(Collectors.toList());
     }
 
+    @ExceptionHandler(org.springframework.http.converter.HttpMessageNotReadableException.class)
+    @ResponseBody
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public String handleMessageNotReadableException(org.springframework.http.converter.HttpMessageNotReadableException ex)
+    {
+        return ex.getMessage();
+    }
+
 }
