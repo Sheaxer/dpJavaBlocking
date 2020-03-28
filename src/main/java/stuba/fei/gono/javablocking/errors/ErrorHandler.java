@@ -11,20 +11,20 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 
-import java.util.Date;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
+/***
+ * Class that implements custom error handling
+ */
 @RestControllerAdvice
 public class ErrorHandler {
 
     @ExceptionHandler(ReportedOverlimitTransactionException.class)
     @ResponseBody
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public String springHandleNotFound(Exception ex)  {
-        return ex.getMessage();
+    public List<String> springHandleNotFound(Exception ex)  {
+        return new ArrayList<>(Collections.singleton(ex.getMessage()));
     }
 
     @ExceptionHandler(CreateReportedOverlimitTransactionException.class)
@@ -34,6 +34,11 @@ public class ErrorHandler {
         return ex.getMessage();
     }
 
+    /***
+     * Transforms validation errors into JSON array
+     * @param ex caught validation exception
+     * @return List of validation error messages
+     */
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseBody
     @ResponseStatus(HttpStatus.BAD_REQUEST)

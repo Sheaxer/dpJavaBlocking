@@ -9,6 +9,9 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+/***
+ * Annotation for validation o
+ */
 @Target(ElementType.FIELD)
 @Constraint(validatedBy = BankingDayValidator.class)
 @Retention(RetentionPolicy.RUNTIME)

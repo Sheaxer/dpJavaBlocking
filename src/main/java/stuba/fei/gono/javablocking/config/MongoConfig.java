@@ -14,9 +14,20 @@ import stuba.fei.gono.javablocking.data.ZonedDateTimeWriteConverter;
 import java.util.ArrayList;
 import java.util.List;
 
+/***
+ * Configuration class that modifies default configuration of MongoDB
+ */
 @Configuration
 public class MongoConfig  {
 
+    /***
+     * Adds custom converters for converting Java Classes that are unable to be serialized / deserialized by MongoDB
+     * to classes that are able to be serialized / deserialized
+     * @return Instance of class MongoCustomConversions instantiated by list of custom MongoDB converters
+     * @see MongoCustomConversions
+     * @see org.springframework.data.convert.WritingConverter
+     * @see org.springframework.data.convert.ReadingConverter
+     */
     @Bean
     public MongoCustomConversions customConversions()
     {

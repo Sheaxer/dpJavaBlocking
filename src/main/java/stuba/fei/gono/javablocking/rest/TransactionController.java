@@ -35,6 +35,13 @@ public class TransactionController {
         this.nextSequenceService = nextSequenceService;
     }
 
+    /***
+     * Returns single ReportedOverlimitTransaction based on its  id.
+     * @see ReportedOverlimitTransaction
+     * @param id
+     * @return
+     * @throws ReportedOverlimitTransactionException
+     */
     @GetMapping(value = "/{id}")
     public ResponseEntity<ReportedOverlimitTransaction> getTransaction(@PathVariable String id) throws ReportedOverlimitTransactionException
     {
@@ -65,8 +72,19 @@ public class TransactionController {
             throws CreateReportedOverlimitTransactionException
     {
         // validate date
+        boolean wasModified = false;
+        String newId = nextSequenceService.getNextSequence("customSequences");
+        while(transactionRepository.findById(newId).isPresent())
+        {
+            newId = nextSequenceService.getNextSequence("customSequences");
+            wasModified=true;
+            log.info("wasModified");
+        }
+        if(wasModified)
+            nextSequenceService.setNextSequence("customSequences",Integer.valueOf(newId));
 
-        newTransaction.setId(nextSequenceService.getNextSequence("customSequences"));
+        newTransaction.setId(newId);
+
 
         if(newTransaction.getState() == null)
             newTransaction.setState(State.CREATED);
