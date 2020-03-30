@@ -9,6 +9,10 @@ import java.io.IOException;
 import java.time.OffsetDateTime;
 import java.time.ZonedDateTime;
 
+/***
+ * Class that allows deserialization from JSON to an instance of OffsetDateTime
+ * @see OffsetDateTime
+ */
 public class OffsetDateTimeDeserializer extends StdDeserializer<OffsetDateTime> {
     protected OffsetDateTimeDeserializer(Class<?> vc) {
         super(vc);

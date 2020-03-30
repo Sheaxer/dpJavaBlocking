@@ -17,5 +17,5 @@ public @interface MaxAmount {
     String message() default "";
     Class<?>[] groups() default { };
     Class<? extends Payload>[] payload() default { };
-    double maxValue() default 999999999.99;
+    double maxValue() default 0.0;
 }

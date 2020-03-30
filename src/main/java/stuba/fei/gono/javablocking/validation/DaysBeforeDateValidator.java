@@ -1,6 +1,7 @@
 package stuba.fei.gono.javablocking.validation;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import stuba.fei.gono.javablocking.validation.annotations.DaysBeforeDate;
 
 import javax.validation.ConstraintValidator;
@@ -12,11 +13,17 @@ public class DaysBeforeDateValidator implements ConstraintValidator<DaysBeforeDa
 
     private Date today;
     private long days;
+    @Value("${reportedOverlimitTransaction.daysBefore:3}")
+    private long cDays;
 
     @Override
     public void initialize(DaysBeforeDate constraintAnnotation) {
         this.today = new Date();
         days = constraintAnnotation.days();
+        log.info(String.valueOf(days));
+        if(days==0)
+            days = cDays;
+        log.info(String.valueOf(days));
     }
 
     @Override
@@ -26,8 +33,6 @@ public class DaysBeforeDateValidator implements ConstraintValidator<DaysBeforeDa
         log.info(String.valueOf(diff));
         if(diff <0)
             return true;
-        if(TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS) >= days)
-            return true;
-        return false;
+        return TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS) >= days;
     }
 }

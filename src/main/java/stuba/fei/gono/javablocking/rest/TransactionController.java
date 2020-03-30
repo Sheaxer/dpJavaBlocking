@@ -2,6 +2,7 @@ package stuba.fei.gono.javablocking.rest;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,7 +22,8 @@ import java.util.Optional;
 @RequestMapping("/reportedOverlimitTransaction")
 @Slf4j
 public class TransactionController {
-
+    @Value("${reportedOverlimitTransaction.transaction.sequenceName:customSequences}")
+    private String sequenceName;
     private ClientRepository clientRepository;
     private ReportedOverlimitTransactionRepository transactionRepository;
     private NextSequenceService nextSequenceService;
@@ -38,9 +40,9 @@ public class TransactionController {
     /***
      * Returns single ReportedOverlimitTransaction based on its  id.
      * @see ReportedOverlimitTransaction
-     * @param id
-     * @return
-     * @throws ReportedOverlimitTransactionException
+     * @param id Id of the requested ReportedOverlimitTransaction
+     * @return requested instance of ReportedOverlimitTransaction
+     * @throws ReportedOverlimitTransactionException exception if there is no instance of ReportedOverlimitTransaction with the requested id
      */
     @GetMapping(value = "/{id}")
     public ResponseEntity<ReportedOverlimitTransaction> getTransaction(@PathVariable String id) throws ReportedOverlimitTransactionException
@@ -72,7 +74,7 @@ public class TransactionController {
             throws CreateReportedOverlimitTransactionException
     {
         // validate date
-        boolean wasModified = false;
+        /*boolean wasModified = false;
         String newId = nextSequenceService.getNextSequence("customSequences");
         while(transactionRepository.findById(newId).isPresent())
         {
@@ -80,8 +82,11 @@ public class TransactionController {
             wasModified=true;
             log.info("wasModified");
         }
-        if(wasModified)
-            nextSequenceService.setNextSequence("customSequences",Integer.valueOf(newId));
+        if(wasModified) {
+            nextSequenceService.setNextSequence("customSequences", newId);
+        }*/
+        log.info(this.sequenceName);
+        String newId = nextSequenceService.getNewId(transactionRepository,sequenceName);
 
         newTransaction.setId(newId);
 
@@ -95,6 +100,15 @@ public class TransactionController {
         return new ResponseEntity<>(newTransaction,HttpStatus.CREATED);
     }
 
+    /***
+     * Deletes non-closed ReportedOverlimitTransaction with the request id from database.
+     * @see ReportedOverlimitTransaction
+     * @see State
+     * @param id id of ReportedOverlimitTransaction that should be deleted
+     * @return deleted ReportedOverlimitTransaction
+     * @throws ReportedOverlimitTransactionException if requested ReportedOverlimitTransaction cannot be deleted
+     * either because it's state is not CLOSED or there is isn't one with requested it stored.
+     */
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<ReportedOverlimitTransaction> deleteTransaction(@PathVariable String id)
     {

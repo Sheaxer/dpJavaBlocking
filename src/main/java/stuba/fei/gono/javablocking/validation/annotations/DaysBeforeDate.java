@@ -17,5 +17,5 @@ public @interface DaysBeforeDate {
     String message() default "";
     Class<?>[] groups() default { };
     Class<? extends Payload>[] payload() default { };
-    long days() default 3L;
+    long days() default 0L;
 }

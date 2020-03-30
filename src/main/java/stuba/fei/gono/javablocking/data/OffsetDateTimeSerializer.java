@@ -10,6 +10,9 @@ import java.time.OffsetDateTime;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
+/***
+ * Custom serialization of OffsetDateTime to JSON. JSON format is yy-MM-ddThh:mm:ssOffset.
+ */
 @Slf4j
 public class OffsetDateTimeSerializer extends StdSerializer<OffsetDateTime> {
     protected OffsetDateTimeSerializer(Class<OffsetDateTime> t) {
