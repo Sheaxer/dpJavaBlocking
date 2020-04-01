@@ -27,10 +27,12 @@ public class ReportedOverlimitTransaction {
 
     @Id
     private String id;
+
     @NotNull(message = "MUST_NOT_BE_NULL")
     private OrderCategory orderCategory;
 
     private State state;
+
     @NotNull
     @ValidAccount
     private Account sourceAccount;
@@ -41,16 +43,18 @@ public class ReportedOverlimitTransaction {
     @JsonDeserialize(using = ClientDeserializer.class)
     @JsonSerialize(using = ClientSerializer.class)
     private Client clientId;
+
     @NotBlank
     private String identificationId;
+
     @NotNull
     @MaxAmount(message = "FIELD_INVALID")
     private Money amount;
+
     @NotNull
     @NotEmpty
     private List<Vault> vault;
-   // @JsonDeserialize(using = ZonedDateTimeDeserializer.class)
-    //@JsonFormat(shape = JsonFormat.Shape.STRING, pattern="yyyy-MM-dd HH:mm:ss a z")
+
     @JsonDeserialize(using = OffsetDateTimeDeserializer.class)
     @JsonSerialize(using = OffsetDateTimeSerializer.class)
     private OffsetDateTime modificationDate;
@@ -77,6 +81,7 @@ public class ReportedOverlimitTransaction {
     @JsonDeserialize(using = OrganisationUnitDeserializer.class)
     @JsonSerialize(using = OrganisationUnitSerializer.class)
     private OrganisationUnit organisationUnitID;
+
     @DBRef
     @NotNull(message = "CREATEDBY_NOT_VALID")
     @JsonDeserialize(using = EmployeeDeserializer.class)

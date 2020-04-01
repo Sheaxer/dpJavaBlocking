@@ -15,6 +15,8 @@ import stuba.fei.gono.javablocking.mongo.data.repositories.OrganisationUnitRepos
 import stuba.fei.gono.javablocking.mongo.data.repositories.ReportedOverlimitTransactionRepository;
 import stuba.fei.gono.javablocking.pojo.*;
 
+import javax.validation.constraints.NotNull;
+
 import static org.springframework.data.mongodb.core.FindAndModifyOptions.options;
 import static org.springframework.data.mongodb.core.query.Criteria.where;
 import static org.springframework.data.mongodb.core.query.Query.query;
@@ -38,7 +40,7 @@ public class NextSequenceService {
      * @param seqName name of the sequence where to find next value of id
      * @return new id to be used to insert new Document into MongoDB
      */
-    public String getNextSequence(String seqName)
+    public String getNextSequence(@NotNull String seqName)
     {
         SequenceId counter = mongoOperations.findAndModify(
                 query(where("_id").is(seqName)),
@@ -65,7 +67,7 @@ public class NextSequenceService {
      * @param seqName name of the sequence
      * @param value value that the sequence will be set to
      */
-    public void setNextSequence(String seqName,String value)
+    public void setNextSequence(@NotNull String seqName,@NotNull String value)
     {
         SequenceId s = mongoOperations.findAndModify(
                 query(where("_id").is(seqName)),
@@ -79,7 +81,7 @@ public class NextSequenceService {
         }*/
     }
 
-    public String getNewId(MongoRepository<?,String> rep,String sequenceName)
+    public String getNewId(@NotNull MongoRepository<?,String> rep, @NotNull String sequenceName)
     {
         String newId = this.getNextSequence(sequenceName);
         if( rep.findById(newId).isPresent())
@@ -103,7 +105,7 @@ public class NextSequenceService {
         return newId;
     }
 
-    public String lastId(Class<?> rep)
+    public String lastId(@NotNull Class<?> rep)
     {
         return mongoOperations.execute(rep, mongoCollection -> {
            FindIterable<Document> doc= mongoCollection.find().projection(Projections.include("_id"));

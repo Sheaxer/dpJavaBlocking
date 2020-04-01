@@ -28,11 +28,7 @@ import java.util.Optional;
 //@CrossOrigin(origins = "http://a.com")
 @Slf4j
 public class TransactionController {
-    //@Value("${reportedOverlimitTransaction.transaction.sequenceName:customSequences}")
-    //private String sequenceName;
-    //private ClientRepository clientRepository;
-    //private ReportedOverlimitTransactionRepository transactionRepository;
-    //private NextSequenceService nextSequenceService;
+
     private ReportedOverlimitTransactionService transactionService;
 
     /*@Autowired
@@ -56,7 +52,7 @@ public class TransactionController {
      */
     @GetMapping(value = "/{id}",produces = "application/json")
     @ResponseBody
-    public ResponseEntity<ReportedOverlimitTransaction> getTransaction(@PathVariable String id) throws ReportedOverlimitTransactionException
+    public ResponseEntity<ReportedOverlimitTransaction> getTransaction(@PathVariable String id)
     {
         ReportedOverlimitTransaction transaction = transactionService.getTransactionById(id);
         return new ResponseEntity<>(transaction,HttpStatus.OK);
@@ -80,7 +76,6 @@ public class TransactionController {
     @PostMapping(produces = "application/json")
     @ResponseBody
     public ResponseEntity<ReportedOverlimitTransaction> postTransaction(@Valid @RequestBody ReportedOverlimitTransaction newTransaction)
-
     {
         ReportedOverlimitTransaction transaction = transactionService.postTransaction(newTransaction);
         return new ResponseEntity<>(transaction,HttpStatus.CREATED);

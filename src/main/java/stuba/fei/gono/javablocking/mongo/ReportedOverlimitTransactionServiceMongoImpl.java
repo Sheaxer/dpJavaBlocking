@@ -9,6 +9,7 @@ import stuba.fei.gono.javablocking.pojo.ReportedOverlimitTransaction;
 import stuba.fei.gono.javablocking.pojo.State;
 import stuba.fei.gono.javablocking.services.ReportedOverlimitTransactionService;
 
+import javax.validation.constraints.NotNull;
 import java.time.OffsetDateTime;
 import java.util.Optional;
 @Service
@@ -26,11 +27,11 @@ public class ReportedOverlimitTransactionServiceMongoImpl implements ReportedOve
     {
         //this.clientRepository = clientRepository;
         this.transactionRepository = transactionRepository;
-        this.nextSequenceService= nextSequenceService;
+        this.nextSequenceService = nextSequenceService;
     }
 
     @Override
-    public ReportedOverlimitTransaction postTransaction(ReportedOverlimitTransaction newTransaction) {
+    public ReportedOverlimitTransaction postTransaction(@NotNull ReportedOverlimitTransaction newTransaction) {
 
         String newId = nextSequenceService.getNewId(transactionRepository,sequenceName);
 
@@ -40,7 +41,7 @@ public class ReportedOverlimitTransactionServiceMongoImpl implements ReportedOve
     }
 
     @Override
-    public ReportedOverlimitTransaction getTransactionById(String id) throws ReportedOverlimitTransactionException {
+    public ReportedOverlimitTransaction getTransactionById(@NotNull String id) throws ReportedOverlimitTransactionException {
         Optional<ReportedOverlimitTransaction> transaction= transactionRepository.findById(id);
         if(transaction.isPresent())
             return transaction.get();
@@ -49,7 +50,7 @@ public class ReportedOverlimitTransactionServiceMongoImpl implements ReportedOve
     }
 
     @Override
-    public ReportedOverlimitTransaction putTransaction(String id, ReportedOverlimitTransaction transaction) {
+    public ReportedOverlimitTransaction putTransaction(@NotNull String id, @NotNull ReportedOverlimitTransaction transaction) {
         transaction.setId(id);
         transaction.setModificationDate(OffsetDateTime.now());
         transaction.setZoneOffset(transaction.getModificationDate().getOffset().getId());
@@ -58,7 +59,7 @@ public class ReportedOverlimitTransactionServiceMongoImpl implements ReportedOve
     }
 
     @Override
-    public ReportedOverlimitTransaction deleteTransaction(String id) throws ReportedOverlimitTransactionException {
+    public ReportedOverlimitTransaction deleteTransaction(@NotNull String id) {
         Optional<ReportedOverlimitTransaction> transaction= transactionRepository.findById(id);
         if(transaction.isPresent())
         {
