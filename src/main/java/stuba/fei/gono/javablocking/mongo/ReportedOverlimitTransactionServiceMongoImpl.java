@@ -34,7 +34,8 @@ public class ReportedOverlimitTransactionServiceMongoImpl implements ReportedOve
 
         String newId = nextSequenceService.getNewId(transactionRepository,sequenceName);
 
-
+        newTransaction.setState(State.CREATED);
+        //transactionRepository.save(newTransaction);
         return putTransaction(newId,newTransaction);
     }
 

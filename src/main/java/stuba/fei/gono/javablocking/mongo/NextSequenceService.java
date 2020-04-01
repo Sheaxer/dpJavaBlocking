@@ -103,7 +103,7 @@ public class NextSequenceService {
         return newId;
     }
 
-    public String lastId(Class rep)
+    public String lastId(Class<?> rep)
     {
         return mongoOperations.execute(rep, mongoCollection -> {
            FindIterable<Document> doc= mongoCollection.find().projection(Projections.include("_id"));
@@ -115,15 +115,6 @@ public class NextSequenceService {
                 lastVal = tmp > lastVal ? tmp : lastVal;
             }
             lastVal++;
-           // log.info(String.valueOf(lastVal));
-           //s.forEach((Consumer<? super Long>) s1 -> log.info(String.valueOf(s1)));
-           /*doc.forEach((Consumer<? super Document>) document ->{
-               Long tmp = Long.valueOf(document.getString("_id"));
-               max =
-               log.info(document.toString());
-              // document.get()
-               log.info(document.getString("_id"));
-           });*/
            return String.valueOf(lastVal);
         });
     }

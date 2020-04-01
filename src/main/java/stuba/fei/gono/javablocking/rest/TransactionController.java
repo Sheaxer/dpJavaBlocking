@@ -3,7 +3,9 @@ package stuba.fei.gono.javablocking.rest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import stuba.fei.gono.javablocking.mongo.NextSequenceService;
@@ -17,14 +19,17 @@ import stuba.fei.gono.javablocking.services.ReportedOverlimitTransactionService;
 
 import javax.validation.Valid;
 import java.time.OffsetDateTime;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/reportedOverlimitTransaction")
+@RequestMapping(value = "/reportedOverlimitTransaction")
+//@CrossOrigin(origins = "http://a.com")
 @Slf4j
 public class TransactionController {
-    @Value("${reportedOverlimitTransaction.transaction.sequenceName:customSequences}")
-    private String sequenceName;
+    //@Value("${reportedOverlimitTransaction.transaction.sequenceName:customSequences}")
+    //private String sequenceName;
     //private ClientRepository clientRepository;
     //private ReportedOverlimitTransactionRepository transactionRepository;
     //private NextSequenceService nextSequenceService;
@@ -49,7 +54,8 @@ public class TransactionController {
      * @return requested instance of ReportedOverlimitTransaction
      * @throws ReportedOverlimitTransactionException exception if there is no instance of ReportedOverlimitTransaction with the requested id
      */
-    @GetMapping(value = "/{id}")
+    @GetMapping(value = "/{id}",produces = "application/json")
+    @ResponseBody
     public ResponseEntity<ReportedOverlimitTransaction> getTransaction(@PathVariable String id) throws ReportedOverlimitTransactionException
     {
         ReportedOverlimitTransaction transaction = transactionService.getTransactionById(id);
@@ -71,12 +77,13 @@ public class TransactionController {
         }
     }*/
 
-    @PostMapping
+    @PostMapping(produces = "application/json")
+    @ResponseBody
     public ResponseEntity<ReportedOverlimitTransaction> postTransaction(@Valid @RequestBody ReportedOverlimitTransaction newTransaction)
 
     {
         ReportedOverlimitTransaction transaction = transactionService.postTransaction(newTransaction);
-        return new ResponseEntity<>(newTransaction,HttpStatus.CREATED);
+        return new ResponseEntity<>(transaction,HttpStatus.CREATED);
     }
 
     /*@PostMapping
@@ -108,7 +115,8 @@ public class TransactionController {
      * @throws ReportedOverlimitTransactionException if requested ReportedOverlimitTransaction cannot be deleted
      * either because it's state is not CLOSED or there is isn't one with requested it stored.
      */
-    @DeleteMapping(value = "/{id}")
+    @DeleteMapping(value = "/{id}", produces = "application/json")
+    @ResponseBody
     public ResponseEntity<ReportedOverlimitTransaction> deleteTransaction(@PathVariable String id)
     {
         ReportedOverlimitTransaction transaction = transactionService.deleteTransaction(id);
@@ -136,8 +144,9 @@ public class TransactionController {
         }
     }*/
 
-    @PutMapping(value = "/{id}")
-    @PostMapping(value="/{id}")
+    @PutMapping(value = "/{id}", produces = "application/json")
+    @PostMapping(value="/{id}", produces = "application/json")
+    @ResponseBody
     public ResponseEntity<ReportedOverlimitTransaction> putTransaction(@PathVariable String id, @Valid @RequestBody ReportedOverlimitTransaction transaction)
     {
         transaction = transactionService.putTransaction(id,transaction);
