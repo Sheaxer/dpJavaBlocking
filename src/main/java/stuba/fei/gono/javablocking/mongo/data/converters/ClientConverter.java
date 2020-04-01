@@ -1,8 +1,9 @@
-package stuba.fei.gono.javablocking.data;
+package stuba.fei.gono.javablocking.mongo.data.converters;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
+import stuba.fei.gono.javablocking.mongo.data.repositories.ClientRepository;
 import stuba.fei.gono.javablocking.pojo.Client;
 @Component
 public class ClientConverter implements Converter<String,Client> {
@@ -18,6 +19,6 @@ public class ClientConverter implements Converter<String,Client> {
 
     @Override
     public Client convert(String s) {
-        return clientRepository.findById(s).get();
+        return clientRepository.findById(s).orElse(null);
     }
 }

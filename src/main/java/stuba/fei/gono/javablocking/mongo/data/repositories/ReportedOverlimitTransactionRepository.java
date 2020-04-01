@@ -1,9 +1,7 @@
-package stuba.fei.gono.javablocking.data;
+package stuba.fei.gono.javablocking.mongo.data.repositories;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
 import stuba.fei.gono.javablocking.pojo.ReportedOverlimitTransaction;
-
-import java.util.Optional;
 
 public interface ReportedOverlimitTransactionRepository extends MongoRepository<ReportedOverlimitTransaction, String>
 {

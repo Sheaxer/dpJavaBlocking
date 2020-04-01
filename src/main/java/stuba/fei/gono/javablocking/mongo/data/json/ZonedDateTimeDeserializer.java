@@ -1,14 +1,13 @@
-package stuba.fei.gono.javablocking.data;
+package stuba.fei.gono.javablocking.mongo.data.json;
 
 import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
+
 @Component
 public class ZonedDateTimeDeserializer extends StdDeserializer<ZonedDateTime> {
 

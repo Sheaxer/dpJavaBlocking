@@ -1,9 +1,7 @@
-package stuba.fei.gono.javablocking.data;
+package stuba.fei.gono.javablocking.mongo.data.converters;
 
-import org.springframework.context.annotation.Bean;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.data.convert.ReadingConverter;
-import org.springframework.stereotype.Component;
 
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;

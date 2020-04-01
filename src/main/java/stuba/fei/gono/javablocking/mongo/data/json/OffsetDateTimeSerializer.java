@@ -1,4 +1,4 @@
-package stuba.fei.gono.javablocking.data;
+package stuba.fei.gono.javablocking.mongo.data.json;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;
@@ -7,7 +7,6 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
 import java.time.OffsetDateTime;
-import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
 /***

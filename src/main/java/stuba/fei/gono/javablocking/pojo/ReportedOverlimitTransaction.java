@@ -7,18 +7,16 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.annotation.PersistenceConstructor;
 import org.springframework.data.mongodb.core.mapping.DBRef;
-import stuba.fei.gono.javablocking.data.*;
+import stuba.fei.gono.javablocking.mongo.data.converters.OffsetDateTimeDeserializer;
+import stuba.fei.gono.javablocking.mongo.data.json.*;
 import stuba.fei.gono.javablocking.validation.annotations.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.*;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
-import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.List;
 

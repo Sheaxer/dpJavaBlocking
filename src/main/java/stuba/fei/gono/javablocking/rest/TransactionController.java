@@ -6,13 +6,14 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import stuba.fei.gono.javablocking.config.NextSequenceService;
-import stuba.fei.gono.javablocking.data.ClientRepository;
-import stuba.fei.gono.javablocking.data.ReportedOverlimitTransactionRepository;
+import stuba.fei.gono.javablocking.mongo.NextSequenceService;
+import stuba.fei.gono.javablocking.mongo.data.repositories.ClientRepository;
+import stuba.fei.gono.javablocking.mongo.data.repositories.ReportedOverlimitTransactionRepository;
 import stuba.fei.gono.javablocking.errors.CreateReportedOverlimitTransactionException;
 import stuba.fei.gono.javablocking.errors.ReportedOverlimitTransactionException;
 import stuba.fei.gono.javablocking.pojo.ReportedOverlimitTransaction;
 import stuba.fei.gono.javablocking.pojo.State;
+import stuba.fei.gono.javablocking.services.ReportedOverlimitTransactionService;
 
 import javax.validation.Valid;
 import java.time.OffsetDateTime;
@@ -24,17 +25,21 @@ import java.util.Optional;
 public class TransactionController {
     @Value("${reportedOverlimitTransaction.transaction.sequenceName:customSequences}")
     private String sequenceName;
-    private ClientRepository clientRepository;
-    private ReportedOverlimitTransactionRepository transactionRepository;
-    private NextSequenceService nextSequenceService;
+    //private ClientRepository clientRepository;
+    //private ReportedOverlimitTransactionRepository transactionRepository;
+    //private NextSequenceService nextSequenceService;
+    private ReportedOverlimitTransactionService transactionService;
 
-
-    @Autowired
-    public TransactionController(ClientRepository clientRepository, ReportedOverlimitTransactionRepository transactionRepository, NextSequenceService nextSequenceService)
+    /*@Autowired
+    public TransactionController(ReportedOverlimitTransactionRepository transactionRepository, NextSequenceService nextSequenceService)
     {
-        this.clientRepository = clientRepository;
+        //this.clientRepository = clientRepository;
         this.transactionRepository = transactionRepository;
         this.nextSequenceService = nextSequenceService;
+    }*/
+    @Autowired
+    public TransactionController(ReportedOverlimitTransactionService transactionService) {
+        this.transactionService = transactionService;
     }
 
     /***
@@ -47,44 +52,38 @@ public class TransactionController {
     @GetMapping(value = "/{id}")
     public ResponseEntity<ReportedOverlimitTransaction> getTransaction(@PathVariable String id) throws ReportedOverlimitTransactionException
     {
+        ReportedOverlimitTransaction transaction = transactionService.getTransactionById(id);
+        return new ResponseEntity<>(transaction,HttpStatus.OK);
+    }
+
+    /*@GetMapping(value = "/{id}")
+    public ResponseEntity<ReportedOverlimitTransaction> getTransaction(@PathVariable String id) throws ReportedOverlimitTransactionException
+    {
         Optional<ReportedOverlimitTransaction> transaction= transactionRepository.findById(id);
         if(transaction.isPresent())
         {
             ReportedOverlimitTransaction trans = transaction.get();
-
-            /*trans.setState(State.CREATED);
-            transactionRepository.save(trans);*/
-
-            //trans.getModificationDate();
-            /*if(trans.getZoneOffset() != null) {
-                ZoneOffset offset = ZoneOffset.of(trans.getZoneOffset());
-                trans.setModificationDate(trans.getModificationDate().toInstant().atOffset(offset));
-            }*/
-            //log.info(trans.getClientId().getFirstName());
             return new ResponseEntity<>(trans,HttpStatus.OK);
         }
         else
         {
            throw new ReportedOverlimitTransactionException("ID_NOT_FOUND");
         }
-    }
+    }*/
 
     @PostMapping
     public ResponseEntity<ReportedOverlimitTransaction> postTransaction(@Valid @RequestBody ReportedOverlimitTransaction newTransaction)
+
+    {
+        ReportedOverlimitTransaction transaction = transactionService.postTransaction(newTransaction);
+        return new ResponseEntity<>(newTransaction,HttpStatus.CREATED);
+    }
+
+    /*@PostMapping
+    public ResponseEntity<ReportedOverlimitTransaction> postTransaction(@Valid @RequestBody ReportedOverlimitTransaction newTransaction)
             throws CreateReportedOverlimitTransactionException
     {
-        // validate date
-        /*boolean wasModified = false;
-        String newId = nextSequenceService.getNextSequence("customSequences");
-        while(transactionRepository.findById(newId).isPresent())
-        {
-            newId = nextSequenceService.getNextSequence("customSequences");
-            wasModified=true;
-            log.info("wasModified");
-        }
-        if(wasModified) {
-            nextSequenceService.setNextSequence("customSequences", newId);
-        }*/
+
         log.info(this.sequenceName);
         String newId = nextSequenceService.getNewId(transactionRepository,sequenceName);
 
@@ -98,7 +97,7 @@ public class TransactionController {
         transactionRepository.save(newTransaction);
         log.info("Created new transaction " + newTransaction.getId());
         return new ResponseEntity<>(newTransaction,HttpStatus.CREATED);
-    }
+    }*/
 
     /***
      * Deletes non-closed ReportedOverlimitTransaction with the request id from database.
@@ -110,6 +109,12 @@ public class TransactionController {
      * either because it's state is not CLOSED or there is isn't one with requested it stored.
      */
     @DeleteMapping(value = "/{id}")
+    public ResponseEntity<ReportedOverlimitTransaction> deleteTransaction(@PathVariable String id)
+    {
+        ReportedOverlimitTransaction transaction = transactionService.deleteTransaction(id);
+        return new ResponseEntity<>(transaction,HttpStatus.OK);
+    }
+    /*@DeleteMapping(value = "/{id}")
     public ResponseEntity<ReportedOverlimitTransaction> deleteTransaction(@PathVariable String id)
     {
         Optional<ReportedOverlimitTransaction> transaction= transactionRepository.findById(id);
@@ -129,9 +134,18 @@ public class TransactionController {
         {
             throw new ReportedOverlimitTransactionException("ID_NOT_FOUND");
         }
-    }
+    }*/
 
     @PutMapping(value = "/{id}")
+    @PostMapping(value="/{id}")
+    public ResponseEntity<ReportedOverlimitTransaction> putTransaction(@PathVariable String id, @Valid @RequestBody ReportedOverlimitTransaction transaction)
+    {
+        transaction = transactionService.putTransaction(id,transaction);
+        return new ResponseEntity<>(transaction,HttpStatus.OK);
+    }
+
+    /*@PutMapping(value = "/{id}")
+    @PostMapping(value="/{id}")
     public ResponseEntity<ReportedOverlimitTransaction> putTransaction(@PathVariable String id, @Valid @RequestBody ReportedOverlimitTransaction transaction)
     {
         //Optional<ReportedOverlimitTransaction> tran= transactionRepository.findById(id);
@@ -140,6 +154,6 @@ public class TransactionController {
         transaction.setZoneOffset(transaction.getModificationDate().getOffset().getId());
         transactionRepository.save(transaction);
         return new ResponseEntity<>(transaction, HttpStatus.OK );
-    }
+    }*/
 
 }

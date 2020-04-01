@@ -1,8 +1,9 @@
-package stuba.fei.gono.javablocking.data;
+package stuba.fei.gono.javablocking.mongo.data.converters;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
+import stuba.fei.gono.javablocking.mongo.data.repositories.OrganisationUnitRepository;
 import stuba.fei.gono.javablocking.pojo.OrganisationUnit;
 @Component
 public class OrganisationUnitConverter implements Converter<String, OrganisationUnit> {
@@ -17,6 +18,6 @@ public class OrganisationUnitConverter implements Converter<String, Organisation
 
     @Override
     public OrganisationUnit convert(String s) {
-        return repository.findById(s).get();
+        return repository.findById(s).orElse(null);
     }
 }

@@ -1,12 +1,11 @@
-package stuba.fei.gono.javablocking.data;
+package stuba.fei.gono.javablocking.mongo.data.json;
 
 import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import stuba.fei.gono.javablocking.errors.ReportedOverlimitTransactionException;
+import stuba.fei.gono.javablocking.mongo.data.repositories.ClientRepository;
 import stuba.fei.gono.javablocking.pojo.Client;
 
 import java.io.IOException;
@@ -30,10 +29,10 @@ public class ClientDeserializer extends StdDeserializer<Client > {
 
     /***
      * Deserializes the Client from JSON
-     * @param jsonParser
-     * @param deserializationContext
+     * @param jsonParser parser
+     * @param deserializationContext parser context
      * @return deserialized Client from MongoDB
-     * @throws IOException
+     * @throws IOException exception
      */
     @Override
     public Client deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException {
