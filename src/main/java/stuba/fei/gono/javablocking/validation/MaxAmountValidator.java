@@ -19,9 +19,8 @@ public class MaxAmountValidator implements ConstraintValidator<MaxAmount, Money>
 
     @Override
     public void initialize(MaxAmount constraintAnnotation) {
-        this.val = constraintAnnotation.maxValue();
-        if(this.val == 0.0)
-            this.val = customValue;
+       // this.val = constraintAnnotation.maxValue();
+        this.val = (constraintAnnotation.maxValue() == 0 ? customValue: constraintAnnotation.maxValue());
     }
 
     @Override

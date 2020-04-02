@@ -19,10 +19,10 @@ public class DaysBeforeDateValidator implements ConstraintValidator<DaysBeforeDa
     @Override
     public void initialize(DaysBeforeDate constraintAnnotation) {
         this.today = new Date();
-        days = constraintAnnotation.days();
+        days = (constraintAnnotation.days() == 0 ? cDays : constraintAnnotation.days());
         log.info(String.valueOf(days));
-        if(days==0)
-            days = cDays;
+        /*if(days==0)
+            days = cDays;*/
         log.info(String.valueOf(days));
     }
 

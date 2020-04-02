@@ -28,13 +28,13 @@ public class ReportedOverlimitTransaction {
     @Id
     private String id;
 
-    @NotNull(message = "MUST_NOT_BE_NULL")
+    @NotNull(message = "ORDERCATEGORY_INVALID")
     private OrderCategory orderCategory;
 
     private State state;
 
-    @NotNull
-    @ValidAccount
+    @NotNull(message = "SOURCEACCOUNT_INVALID")
+    @ValidAccount(message = "SOURCEACCOUNT_INVALID")
     private Account sourceAccount;
 
     @DBRef
@@ -44,15 +44,15 @@ public class ReportedOverlimitTransaction {
     @JsonSerialize(using = ClientSerializer.class)
     private Client clientId;
 
-    @NotBlank
+    @NotBlank(message = "IDENTIFICATIONID_INVALID")
     private String identificationId;
 
     @NotNull
     @MaxAmount(message = "FIELD_INVALID")
     private Money amount;
 
-    @NotNull
-    @NotEmpty
+    @NotNull(message = "VAULT_INVALID")
+    @NotEmpty(message = "VAULT_INVALID")
     private List<Vault> vault;
 
     @JsonDeserialize(using = OffsetDateTimeDeserializer.class)
